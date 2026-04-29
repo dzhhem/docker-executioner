@@ -1,0 +1,57 @@
+services:
+
+  # ── PostgreSQL (Example) ───────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dbname
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d dbname" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── pgAdmin (Example) ──────────────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Runner (CLI Tooling) ───────────────────────────────────────────────────
+  # Utility service for one-off commands (lint, test, seed, scripts).
+  # Use: bash dx run <script>
+  runner:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.runner
+    working_dir: /app
+    profiles: [ "tools" ] # Prevent starting automatically with 'up'
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      - DX_SERVICE_NAME=runner
+    # Uncomment when it is necessary to use an env file for the runner service
+    # env_file:
+    #  - .env.docker
+    # Interactive shell by default
+    command: bash
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  node_modules:
