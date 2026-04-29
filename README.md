@@ -2,6 +2,25 @@
 
 `dx` is a project-agnostic Docker eXecutioner CLI — a Compose wrapper that simplifies container management for both development and production environments. It provides smart command routing between the host machine and running containers, making it ideal for monorepo setups — with or without Turborepo.
 
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Companion Scripts](#companion-scripts)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Setup](#setup)
+- [Dev lifecycle](#dev-lifecycle)
+- [Production lifecycle](#production-lifecycle)
+- [Status](#status)
+- [Runner commands](#runner-commands)
+- [Service shortcuts](#service-shortcuts)
+- [Configuration](#configuration)
+- [Compose file setup](#compose-file-setup)
+- [Monorepo usage](#monorepo-usage-with-or-without-turborepo)
+- [.gitignore recommendation](#gitignore-recommendation)
+- [Full command reference](#full-command-reference)
+
 ## Features
 
 - **Smart Proxy:** Detects whether commands should run on the host or be forwarded to the runner container automatically.
